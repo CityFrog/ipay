@@ -1,0 +1,15 @@
+{
+    "name": "cityfrog/ipay",
+    "description": "iPay PHP SDK",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CityFrog\\Ipay\\": "src"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
