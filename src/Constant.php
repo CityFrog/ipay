@@ -1,10 +1,10 @@
 <?php
 
-namespace CityFrog\Ipay;
+namespace Cityfrog\Ipay;
 
 /**
  * Class Constant
- * @package CityFrog\Ipay
+ * @package Cityfrog\Ipay
  */
 class Constant
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace CityFrog\Ipay\Exceptions;
+namespace Cityfrog\Ipay\Exceptions;
 
 /**
  * Class IpayException
- * @package CityFrog\Ipay\Exceptions
+ * @package Cityfrog\Ipay\Exceptions
  */
 class IpayException extends \Exception
 {

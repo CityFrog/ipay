@@ -3,11 +3,12 @@
     "description": "iPay PHP SDK",
     "license": "MIT",
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "guzzle/guzzle": "^3.9"
     },
     "autoload": {
         "psr-4": {
-            "CityFrog\\Ipay\\": "src"
+            "Cityfrog\\Ipay\\": "src"
         }
     },
     "minimum-stability": "dev",
