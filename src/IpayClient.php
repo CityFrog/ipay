@@ -2,7 +2,8 @@
 
 namespace Cityfrog\Ipay;
 
-use Guzzle\Http\Client as GuzzleClient;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * Class IpayClient
@@ -40,14 +41,14 @@ class IpayClient
 
         return [
             'login' => $this->login,
-            'time' => $time,
-            'sign' => md5($time . $this->sign)
+            'time'  => $time,
+            'sign'  => md5($time . $this->sign)
         ];
     }
 
     /**
      * @param string $action
-     * @param array $body
+     * @param array  $body
      *
      * @return array
      */
@@ -55,33 +56,36 @@ class IpayClient
     {
         return [
             'request' => [
-                'auth' => $this->getAuth(),
+                'auth'   => $this->getAuth(),
                 'action' => $action,
-                'body' => $body
+                'body'   => $body
             ]
         ];
     }
 
     /**
      * @param string $action
-     * @param array $body
+     * @param array  $body
+     *
      * @return array
      * @throws \Exception
      */
     public function sendRequest(string $action, array $body = []): array
     {
-        $request = $this->guzzleClient->post(
+        $request = new Request(
+            'POST',
             Constant::IPAY_URL,
             [],
             json_encode($this->createRequestData($action, $body))
         );
 
+        $response = $this->guzzleClient->send($request);
+
         try {
-            $response = $request->send();
+            return \GuzzleHttp\json_decode($response->getBody()->getContents());
         } catch (\Exception $exception) {
+            /** @TODO Handle Exception */
             throw $exception;
         }
-
-        return $response->json();
     }
 }
