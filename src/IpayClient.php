@@ -2,6 +2,8 @@
 
 namespace Cityfrog\Ipay;
 
+use Cityfrog\Ipay\Entity\User;
+use Cityfrog\Ipay\Exceptions\IpayException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\GuzzleException;
@@ -88,7 +90,13 @@ class IpayClient
         try {
             $response = $this->guzzleClient->send($request);
 
-            return \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
+            $ipayResponse = \GuzzleHttp\json_decode($response->getBody()->getContents(), true)['response'];
+
+            if ($ipayResponse['error']) {
+                throw new IpayException($ipayResponse['error']);
+            }
+
+            return $ipayResponse;
         } catch (GuzzleException $exception) {
             /** @TODO Handle Guzzle Exception */
             throw $exception;
@@ -96,5 +104,35 @@ class IpayClient
             /** @TODO Handle Exception */
             throw $exception;
         }
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     *
+     * @throws GuzzleException
+     */
+    public function check(User $user): array
+    {
+        return $this->sendRequest('Check', $user->getRequestBody());
+    }
+
+    /**
+     * @param User $user
+     * @param string $lang
+     * @return string
+     *
+     * @throws GuzzleException
+     */
+    public function registerByUrl(User $user, string $lang = 'ru'): string
+    {
+        $response = $this->sendRequest(
+            'RegisterByURL',
+            $user->getRequestBody() + [
+                'lang' => $lang
+            ]
+        );
+
+        return $response['url'];
     }
 }
