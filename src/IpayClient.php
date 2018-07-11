@@ -5,6 +5,7 @@ namespace Cityfrog\Ipay;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\GuzzleException;
+use Carbon\Carbon;
 
 /**
  * Class IpayClient
@@ -38,7 +39,10 @@ class IpayClient
      */
     protected function getAuth(): array
     {
-        $time = (new \DateTime())->format(Constant::TIME_FORMAT);
+        $time = (new Carbon())
+            //
+            ->setTimezone('Europe/Kiev')
+            ->format(Constant::TIME_FORMAT);
 
         return [
             'login' => $this->login,

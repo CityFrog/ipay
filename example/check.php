@@ -2,12 +2,12 @@
 
 $rootDir = dirname(__DIR__);
 
-include "{$rootDir}/vendor/autoload.php";
+include $rootDir . "/vendor/autoload.php";
 
 use Cityfrog\Ipay\IpayClient;
 
-$login = '';
-$secretKey = '';
+$login = 'YOUR LOGIN';
+$secretKey = 'YOUR SECRET KEY';
 
 $client = new IpayClient($login, $secretKey);
 
