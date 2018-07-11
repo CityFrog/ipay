@@ -7,6 +7,8 @@
     <br/>
     <a href="https://www.ipay.ua/">iPay</a>
     ·
+    <a href="https://walletmc.ipay.ua/doc.php">iPay API Doc</a>
+    ·
     <a href="https://cf.ua">Cityfrog</a>
   </p>
 </p>

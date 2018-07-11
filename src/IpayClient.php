@@ -4,6 +4,7 @@ namespace Cityfrog\Ipay;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class IpayClient
@@ -24,7 +25,7 @@ class IpayClient
      * @param string $login
      * @param string $sign
      */
-    public function __constructor(string $login, string $sign)
+    public function __construct(string $login, string $sign)
     {
         $this->login = $login;
         $this->sign = $sign;
@@ -41,14 +42,14 @@ class IpayClient
 
         return [
             'login' => $this->login,
-            'time'  => $time,
-            'sign'  => md5($time . $this->sign)
+            'time' => $time,
+            'sign' => md5($time . $this->sign)
         ];
     }
 
     /**
      * @param string $action
-     * @param array  $body
+     * @param array $body
      *
      * @return array
      */
@@ -56,18 +57,19 @@ class IpayClient
     {
         return [
             'request' => [
-                'auth'   => $this->getAuth(),
+                'auth' => $this->getAuth(),
                 'action' => $action,
-                'body'   => $body
+                'body' => $body
             ]
         ];
     }
 
     /**
      * @param string $action
-     * @param array  $body
-     *
+     * @param array $body
      * @return array
+     *
+     * @throws GuzzleException
      * @throws \Exception
      */
     public function sendRequest(string $action, array $body = []): array
@@ -79,10 +81,13 @@ class IpayClient
             json_encode($this->createRequestData($action, $body))
         );
 
-        $response = $this->guzzleClient->send($request);
-
         try {
-            return \GuzzleHttp\json_decode($response->getBody()->getContents());
+            $response = $this->guzzleClient->send($request);
+
+            return \GuzzleHttp\json_decode($response->getBody()->getContents(), true);
+        } catch (GuzzleException $exception) {
+            /** @TODO Handle Guzzle Exception */
+            throw $exception;
         } catch (\Exception $exception) {
             /** @TODO Handle Exception */
             throw $exception;
