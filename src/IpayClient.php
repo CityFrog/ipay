@@ -2,7 +2,6 @@
 
 namespace Cityfrog\Ipay;
 
-use Cityfrog\Ipay\Entity\User;
 use Cityfrog\Ipay\Exceptions\IpayException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
@@ -12,6 +11,8 @@ use Carbon\Carbon;
 /**
  * Class IpayClient
  * @package Cityfrog\Ipay
+ *
+ * You can find documentation by link - https://walletmc.ipay.ua/doc.php
  */
 class IpayClient
 {
@@ -48,14 +49,14 @@ class IpayClient
 
         return [
             'login' => $this->login,
-            'time' => $time,
-            'sign' => md5($time . $this->sign)
+            'time'  => $time,
+            'sign'  => md5($time . $this->sign)
         ];
     }
 
     /**
      * @param string $action
-     * @param array $body
+     * @param array  $body
      *
      * @return array
      */
@@ -63,16 +64,17 @@ class IpayClient
     {
         return [
             'request' => [
-                'auth' => $this->getAuth(),
+                'auth'   => $this->getAuth(),
                 'action' => $action,
-                'body' => $body
+                'body'   => $body
             ]
         ];
     }
 
     /**
      * @param string $action
-     * @param array $body
+     * @param array  $body
+     *
      * @return array
      *
      * @throws GuzzleException
@@ -104,35 +106,5 @@ class IpayClient
             /** @TODO Handle Exception */
             throw $exception;
         }
-    }
-
-    /**
-     * @param User $user
-     * @return array
-     *
-     * @throws GuzzleException
-     */
-    public function check(User $user): array
-    {
-        return $this->sendRequest('Check', $user->getRequestBody());
-    }
-
-    /**
-     * @param User $user
-     * @param string $lang
-     * @return string
-     *
-     * @throws GuzzleException
-     */
-    public function registerByUrl(User $user, string $lang = 'ru'): string
-    {
-        $response = $this->sendRequest(
-            'RegisterByURL',
-            $user->getRequestBody() + [
-                'lang' => $lang
-            ]
-        );
-
-        return $response['url'];
     }
 }
